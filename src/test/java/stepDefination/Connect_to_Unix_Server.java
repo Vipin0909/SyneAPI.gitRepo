@@ -60,7 +60,7 @@ public class Connect_to_Unix_Server
 	@Given("unix terminal connection using putty")
 	public void unix_terminal_connection_using_putty() {
 		System.out.println("in Given method... ");
-		String host="3.144.74.169";
+		String host="18.191.62.202";
 	    String user="ec2-user";
 	    String password="Vips*1818";
 	    String privateKeyPath = "C:\\DevOps\\Jenkins_Server_2022.pem";

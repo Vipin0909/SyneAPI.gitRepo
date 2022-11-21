@@ -52,7 +52,7 @@ Feature: Fix message test automation
   
   @regression
   Scenario: Fixed Income - US client US market - Verify the Order Capacity and Trading Capacity
-    Given based on given Compliance ID "<compliance ID>" extract the FI logs
+    #Given based on given Compliance ID "<compliance ID>" extract the FI logs
     #Examples: 
       #|compliance ID|20029|Client|Broker
       #|ABCD1|R|DEAL|DEAL
