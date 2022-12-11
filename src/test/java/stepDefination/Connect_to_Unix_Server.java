@@ -85,7 +85,7 @@ public class Connect_to_Unix_Server
 			    			    
 			    if(channel.isConnected()==true)
 			    {
-		    		System.out.println("Connected to server ...");
+		    		System.out.println("Connected to server ...18.191.62.202");
 		    	}else {
 		    		System.out.println("unix server is down");
 		    	}
