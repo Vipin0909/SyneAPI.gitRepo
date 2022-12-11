@@ -24,14 +24,12 @@ Feature: Fix message test automation
  Scenario: Connect to unix server using JSCH
     Given unix terminal connection using putty
     
-
-  #@extractlogs
-  #Scenario Outline: Extract the Fixed Income logs from from murexxx server
-    #Given based on given Compliance ID "<compliance ID>" extract the FI logs
-    #
-    #Examples: 
-      #|compliance ID|
-      #|ABCD1|
+  @extractlogs
+  Scenario Outline: Extract the Fixed Income logs from from murexxx server
+   Given based on given Compliance ID "<compliance ID>" extract the FI logs
+    Examples: 
+      |compliance ID|
+      |ABCD1|
       #|ABCD2|
     
       
@@ -48,14 +46,12 @@ Feature: Fix message test automation
     #And yet another action
     #Then Extract the fix log from log file based on "<compliance ID>"
     #And check more outcomes
-    @fixtoJSON
+  #@fixtoJSON
   
-  @regression
+  #@regression
   Scenario: Fixed Income - US client US market - Verify the Order Capacity and Trading Capacity
     #Given based on given Compliance ID "<compliance ID>" extract the FI logs
     #Examples: 
       #|compliance ID|20029|Client|Broker
       #|ABCD1|R|DEAL|DEAL
       #|ABCD2|
-    
-       

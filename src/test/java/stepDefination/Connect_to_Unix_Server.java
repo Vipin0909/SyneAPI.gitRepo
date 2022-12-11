@@ -40,6 +40,7 @@ public class Connect_to_Unix_Server
 {
 	static String fixmessage;
 	static String complianceID="ABCD1";
+	//static String complianceid;
 	static PrintStream ps;
 	static Channel channel;
 	static Session session;
@@ -49,10 +50,10 @@ public class Connect_to_Unix_Server
 	static HashMap<String,Object> map1;
 	static String[] result;
 	static String jsonstring;
-	static JsonPath js;
+	static JsonPath js_ActualFixMessage;
 	static String key;
 	static String value;
-	static FixClass f1;
+	static FixClass ExpectedFixValues;
 	static FixClass fixoutcome;
 	
 	TestDataBuild Fixdata = new TestDataBuild();
@@ -77,10 +78,11 @@ public class Connect_to_Unix_Server
 		    	session.connect();
 		    		    	
 		    	channel = session.openChannel("shell");
+		    	session.openChannel(privateKeyPath);
 			    ops = channel.getOutputStream();
 			    ps = new PrintStream(ops, true);
 			    channel.connect();
-			    
+			    			    
 			    if(channel.isConnected()==true)
 			    {
 		    		System.out.println("Connected to server ...");
@@ -95,14 +97,14 @@ public class Connect_to_Unix_Server
 	}
 	
 	@Given("based on given Compliance ID {string} extract the FI logs")
-	public void based_on_given_compliance_id_extract_the_fi_logs(String complianceid) throws IOException 
+	public void based_on_given_compliance_id_extract_the_fi_logs(String complianceID) throws IOException 
 	{
 		// send the commands on unix console
 		
-				System.out.println(" extract data for this compliance id "+ complianceid);
+				System.out.println(" extract data for this compliance id "+ complianceID);
 				ps.println("sudo su -");
-			    ps.println("cd /var/lib/jenkins/workspace/BankAPI/src/main/java");
-			    ps.println("grep -ai "+complianceid+" apiLogs");
+			    ps.println("cd /var/lib/jenkins/workspace/SyneAPI/src/main/java");
+			    ps.println("grep -ai "+complianceID+" apiLogs");
 			   
 			    InputStream in=channel.getInputStream();
 			    byte[] tmp=new byte[1024];
@@ -123,10 +125,12 @@ public class Connect_to_Unix_Server
 		            channel.disconnect();
 		            break;
 		          }
-		          //try{Thread.sleep(1000);}catch(Exception ee){}
+		          try{Thread.sleep(1000);}catch(Exception ee){}
 		        }
 			  
+			    channel.disconnect();
 			    session.disconnect();
+			    System.out.println("DONE");
 			    in.close();
 	}
 
@@ -134,7 +138,7 @@ public class Connect_to_Unix_Server
 	public void extract_fix_logs_only() {
 		//fix output will be stored in test.json file
 		try {
-			Path files = Path.of("C:\\eclipse_workspace_2022\\Siri\\target\\extractedFix_logs.txt");
+			Path files = Path.of("C:\\eclipse_workspace_2022\\SyneAPI\\target\\extractedFix_logs.txt");
 		    String fixfile = Files.readString(files);
 			Pattern p = Pattern.compile("8=FIX(.+)(?<=\\|)18=(.+?)(?=\\|)", Pattern.MULTILINE);
 			Matcher m = p.matcher(fixfile);
@@ -177,20 +181,25 @@ public class Connect_to_Unix_Server
             jsonstring =  mapper.writeValueAsString(list);
             System.out.println("Fix message in JSON format for compliance id "+complianceID+"  " + jsonstring);
                       
-            // js obejct has the knowledge of fix message came from unix server which is extracted based on comp id
-            js = new JsonPath(jsonstring);
+            // js Ojbect has the knowledge of fix message came from unix server which is extracted based on comp id
+            js_ActualFixMessage = new JsonPath(jsonstring);
             
-            int FixTagCount = js.getInt("Object.size()");
-            System.out.println(js.getString("Object.18"));
-            System.out.println(js.getString("Object.17"));
-            System.out.println(js.getString("Object.11"));
+            int FixTagCount = js_ActualFixMessage.getInt("Object.size()");
+            System.out.println(js_ActualFixMessage.getString("Object.18"));
+            System.out.println(js_ActualFixMessage.getString("Object.17"));
+            System.out.println(js_ActualFixMessage.getString("Object.11"));
             System.out.println(FixTagCount);
              
             // POJO to JSON
             JsonSerializer js1 = JsonSerializer.DEFAULT_READABLE;
             
-           f1=  Fixdata.SetFixTags("FIX1.1", "449", "AE", "ABCD1", "20140402-11:38:34", "TR_UAT_VENDOR", "8", "GBP", "XYZ", "Price", "RPM");
-            String jsonserialistring = js1.serialize(f1);
+           // here we are using testdatabuild concept, this is expected data. Fix tag should give this result when US client trade US Broker.
+            // ExpectedFixValues object has knowledge of test data.
+            ExpectedFixValues=  Fixdata.SetFixTags("FIX1.1", "449", "AE", complianceID, "20140402-11:38:34", "TR_UAT_VENDOR", "8", "GBP", "XYZ", "Price", "MULEY");
+                         //SetFixTags(String t8,String t9,String t10,String t11,String t12,String t13,String t14,String t15,String t16,String t17,String t18)
+            String jsonserialistring = js1.serialize(ExpectedFixValues);
+            System.out.println("Expected tag value of Fix tag 18 is -- " + ExpectedFixValues.getT18());
+            System.out.println("Actual tag value of Fix tag 18 is -- " + js_ActualFixMessage.getString("Object.18"));
             System.out.println(" POJO to JSON "+ jsonserialistring);
             
             //JSON to POJO
@@ -201,17 +210,21 @@ public class Connect_to_Unix_Server
             //System.out.println(fixoutcome.getT18());
             System.out.println("tag 18 val is " + fixoutcome.getT18());
             
+    		//Assert.assertEquals(ExpectedFixValues.getT18(), js_ActualFixMessage.getString("Object.18"));
+    		
+    		Connect_to_Unix_Server.validate_fixmessages(jsonserialistring, jsonserialistring);
+            
 	}
 	
-	public void validate_fixmessages(String key,String value) {
-		js = new JsonPath(jsonstring);
-		Assert.assertEquals(js.getString(key), fixoutcome);
+	public static void validate_fixmessages(String key,String value) {
+		js_ActualFixMessage = new JsonPath(jsonstring);
+		Assert.assertEquals(js_ActualFixMessage.getString(key), ExpectedFixValues);
+		Assert.assertEquals(ExpectedFixValues.getT18(), js_ActualFixMessage.getString("Object.18"));
 		//Assert.assertEquals(js.getString("Object.18"),fixoutcome.getT18());
         //Assert.assertEquals(js.getString("Object.15"),fixoutcome.getT15());
         //Assert.assertEquals(js.getString("Object.17"),fixoutcome.getT17());
 	}
 }
-
 	
 	
 	
