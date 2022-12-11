@@ -103,7 +103,7 @@ public class Connect_to_Unix_Server
 		
 				System.out.println(" extract data for this compliance id "+ complianceID);
 				ps.println("sudo su -");
-			    ps.println("cd /var/lib/jenkins/workspace/SyneAPI/src/main/java");
+			    ps.println("cd /var/lib/jenkins/workspace/SyneAPI/src/main/java/pojo");
 			    ps.println("grep -ai "+complianceID+" apiLogs");
 			   
 			    InputStream in=channel.getInputStream();
