@@ -7,7 +7,7 @@ public class TestDataBuild {
 
 	FixClass Fixdata = new FixClass();
 	FI_Order_Value ordervalue = new FI_Order_Value();
-	public FixClass SetFixTags(String t8,String t9,String t10,String t11,String t12,String t13,String t14,String t15,String t16,String t17,String t18) {
+	public FixClass SetFixTags(String t8,String t9,String t10,String t11,String t12,String t13,String t14,String t15,String t16,String t17,String t18, int fix_tag18) {
 		
 		Fixdata.setT8(t8);
 		Fixdata.setT9(t9);
@@ -25,9 +25,9 @@ public class TestDataBuild {
 	
 	}
 	
-public FI_Order_Value SetFIOrder(String tag_20021,String tag_20029) {
-	ordervalue.setTag_20021(tag_20021);
-	ordervalue.setTag_20029(tag_20029);
+public FI_Order_Value SetFIOrder(String Last_Capacity,String Order_Capacity) {
+	ordervalue.setLast_Capacity(Last_Capacity);
+	ordervalue.setOrder_Capacity(Order_Capacity);
 	return ordervalue;
 }
 	

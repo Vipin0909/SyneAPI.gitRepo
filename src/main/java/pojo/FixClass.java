@@ -14,7 +14,19 @@ public class FixClass {
 	private String t16;
 	private String t17;
 	private String t18;
+	
+	private int tag18;
+	int Fix_tag18 = Integer.parseInt("18"); 
 		
+	
+
+	public int getFix_tag18() {
+		return Fix_tag18;
+	}
+	public void setFix_tag18(int fix_tag18) {
+		Fix_tag18 = fix_tag18;
+	}
+
 	
 	// getter and setters
 	public String getT8() {

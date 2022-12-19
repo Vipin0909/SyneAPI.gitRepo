@@ -6,7 +6,7 @@ import pojo.FixClass;
 public class TestDataBuild {
 	
 	FI_Order_Value fi = new FI_Order_Value();
-	public FixClass SetFixTags(String t8,String t9,String t10,String t11,String t12,String t13,String t14,String t15,String t16,String t17,String t18) {
+	public FixClass SetFixTags(String t8,String t9,String t10,String t11,String t12,String t13,String t14,String t15,String t16,String t17,String t18,int Fix_tag18) {
 		
 		FixClass fc = new FixClass();
 		
@@ -21,6 +21,7 @@ public class TestDataBuild {
 		fc.setT16(t16);
 		fc.setT17(t17);
 		fc.setT18(t18);
+		fc.setFix_tag18(Fix_tag18);
 		return fc;
 	}
 	
@@ -30,6 +31,8 @@ public class TestDataBuild {
 		fi.setTag_20021(tag20021);
 		
 	}
+	
+	
 
 public String getJsonData(String key) {
 	
