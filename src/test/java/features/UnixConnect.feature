@@ -29,7 +29,7 @@ Feature: Fix message test automation
    Given based on given Compliance ID "<compliance ID>" extract the FI logs
     Examples: 
       |compliance ID|
-      |ABCD1|
+      |VIP|
       #|ABCD2|
     
     @compliancelogs

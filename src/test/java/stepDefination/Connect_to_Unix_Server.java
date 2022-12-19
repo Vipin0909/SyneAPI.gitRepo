@@ -34,6 +34,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.restassured.path.json.JsonPath;
+import pojo.FT_tag18_Test;
 import pojo.FixClass;
 import resources.TestDataBuild;
 
@@ -60,6 +61,7 @@ public class Connect_to_Unix_Server
 	static String value;
 	static FixClass ExpectedFixValues;
 	static FixClass fixoutcome;
+	static FT_tag18_Test fixoutcome18;
 	static FixClass f1;
 	static JsonPath ExpectedTestData_Vipin;
 	static String VipinJson;
@@ -154,6 +156,7 @@ public class Connect_to_Unix_Server
 			fixmessage = m.group();
 			
 			System.out.println( "Extracted only FIX message from Unix server based on comp id ---> " + Connect_to_Unix_Server.complianceID +"" +  fixmessage);
+			
 		
 			}
 		}catch(Exception e) {
@@ -162,7 +165,7 @@ public class Connect_to_Unix_Server
 	}
 
 	@Given("convert the fix message into JSON and parse it for validation")
-	public void fixtoJSON() throws SerializeException, JsonProcessingException, ParseException {
+	public void fixtoJSON() throws SerializeException, ParseException, IOException {
 	    
 		List<HashMap<String,Object>> list = new ArrayList<HashMap<String, Object>>();
 		map = new HashMap<String, Object>();
@@ -194,6 +197,9 @@ public class Connect_to_Unix_Server
             jsonstring= mapper.writerWithDefaultPrettyPrinter().writeValueAsString(map);
             System.out.println("Fix message in JSON format for compliance id "+complianceID+"  " + jsonstring);
             js_ActualFixMessage = new JsonPath(jsonstring);
+            //int birth = js_ActualFixMessage.get("Fix_tag18");
+            
+            System.out.println("tag 18 my birthyear.."+ js_ActualFixMessage.get("18").toString());
             
 //            int FixMessageCount = js_ActualFixMessage.getInt("Fixjson.size()");
 //            for(int i=0;i<FixMessageCount;i++) {
@@ -240,20 +246,19 @@ public class Connect_to_Unix_Server
     		//Connect_to_Unix_Server.validate_fixmessages(jsonserialistring, jsonserialistring);
             
 	}
-	
-	@Given("Fix values {string} {string} {string} {string} {string} {string} {string} {string} {string} {string} {string}")
+
+	@Given("Fix values {string} {string} {string} {string} {string} {string} {string} {string} {string} {string} {string} {int}")
 	public void fix_values(String t8, String t9, String t10, String t11, String t12, String t13, String t14, String t15, String t16, String t17, String t18,int Fix_tag18) throws SerializeException {
 		
-		FixClass f1 = Fixdata.SetFixTags(t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18,Fix_tag18);
+		FixClass f1 = Fixdata.SetFixTags(t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, Fix_tag18);
 		JsonSerializer js2 = JsonSerializer.DEFAULT_READABLE;
 		String VipinJson = js2.serialize(f1); // serialise method accept Object
 		
 		System.out.println("Expected test data converted in to POJO to JSON . ."+ VipinJson);
 		//ExpectedTestData_Vipin = new JsonPath(VipinJson);
-		//System.out.println("what is this "+ExpectedTestData_Vipin);
-		//System.out.println( "This is new Vipin POJO to JSON expected  --- > " + ExpectedTestData_Vipin.getString("t18"));
-		//Assert.assertEquals(ExpectedTestData_Vipin.getString("t18"), js_ActualFixMessage.get("FixJson.18"));
-		
+				//System.out.println("what is this "+ExpectedTestData_Vipin);
+				//System.out.println( "This is new Vipin POJO to JSON expected  --- > " + ExpectedTestData_Vipin.getString("t18"));
+				//Assert.assertEquals(ExpectedTestData_Vipin.getString("t18"), js_ActualFixMessage.get("FixJson.18"));
 	}
 	
 	@Given("Tag {string} should have value as {string}")
@@ -263,6 +268,16 @@ public class Connect_to_Unix_Server
 		//System.out.println(ActualFixMessageNewVipin);
 		//Assert.assertEquals(ExpectedTestData_Vipin.getString(Key), js_ActualFixMessage.get("FixJson"));
 	}
+	
+	
+	@Given("tag value {string}")
+	public void tag_value(String Vipin_Fix_tag18) throws ParseException {
+	    
+		JsonParser jsonparser = JsonParser.DEFAULT;
+        fixoutcome18 = jsonparser.parse(jsonstring, FT_tag18_Test.class);
+	}
+
+
 }
 	
 	

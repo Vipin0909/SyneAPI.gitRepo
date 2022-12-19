@@ -17,9 +17,5 @@ public class FI_Order_Value {
 	public void setOrder_Capacity(String order_Capacity) {
 		Order_Capacity = order_Capacity;
 	}
-	
-	
-	
-	
-	
+
 }
