@@ -13,6 +13,8 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.juneau.jso.JsoParser;
+
 //import javax.json.JsonObject;
 
 import org.apache.juneau.json.JsonParser;
@@ -23,10 +25,12 @@ import org.apache.juneau.serializer.SerializeException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.google.gson.JsonArray;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.restassured.path.json.JsonPath;
@@ -51,12 +55,19 @@ public class Connect_to_Unix_Server
 	static String[] result;
 	static String jsonstring;
 	static JsonPath js_ActualFixMessage;
+	static JsonPath js_ExpectedFixValues;
 	static String key;
 	static String value;
 	static FixClass ExpectedFixValues;
 	static FixClass fixoutcome;
+	static FixClass f1;
+	static JsonPath ExpectedTestData_Vipin;
+	static String VipinJson;
+	static String ActualFixMessageNewVipin;
+	static JsonPath js_ActualFixMessagenewVIPIN;
 	
 	TestDataBuild Fixdata = new TestDataBuild();
+	
 	
 	@Given("unix terminal connection using putty")
 	public void unix_terminal_connection_using_putty() {
@@ -82,7 +93,7 @@ public class Connect_to_Unix_Server
 			    ops = channel.getOutputStream();
 			    ps = new PrintStream(ops, true);
 			    channel.connect();
-			    			    
+			    			    			    
 			    if(channel.isConnected()==true)
 			    {
 		    		System.out.println("Connected to server ...18.191.62.202");
@@ -100,45 +111,21 @@ public class Connect_to_Unix_Server
 	public void based_on_given_compliance_id_extract_the_fi_logs(String complianceID) throws IOException 
 	{
 		// send the commands on unix console
-		
-				System.out.println(" extract data for this compliance id "+ complianceID);
-				ps.println("sudo su -");
-			    ps.println("cd /var/lib/jenkins/workspace/SyneAPI/src/main/java/pojo");
-			    ps.println("grep -ai "+complianceID+" apiLogs");
-			   
-			    InputStream in=channel.getInputStream();
-			    byte[] tmp=new byte[1024];
-			    while(true)
-		        {
-		        	while(in.available()>0)
-		          {
-			   		int i=in.read(tmp, 0, 1024);
-		            if(i<0)
-		            break;
-		            System.out.print(new String(tmp, 0, i));
-	
-		          }
-		            
-		          if(channel.isClosed())
-		          {
-		            System.out.println("exit-status: "+channel.getExitStatus());
-		            channel.disconnect();
-		            break;
-		          }
-		          try{Thread.sleep(1000);}catch(Exception ee){}
-		        }
-			  
-			    channel.disconnect();
-			    session.disconnect();
-			    System.out.println("DONE");
-			    in.close();
+				
+				//ops = channel.getOutputStream();
+				//ps = new PrintStream(ops, true);
+//				ps.println("sudo su -");
+//				System.out.println(" extract data for this compliance id "+ complianceID);
+//			    ps.println( "cd /var/lib/jenkins/workspace/SyneAPI/src/main/java/pojo");
+//			    ps.println("grep -ai "+complianceID+" apiLogs");
+//			    
 	}
 
 	@Given("extract Fix logs only")
 	public void extract_fix_logs_only() {
-		//fix output will be stored in test.json file
+		//fix output will be stored in fixlogs.txt file
 		try {
-			Path files = Path.of("C:\\eclipse_workspace_2022\\SyneAPI\\target\\extractedFix_logs.txt");
+			Path files = Path.of("C:\\eclipse_workspace_2022\\SyneAPI\\target\\fixlogs.txt");
 		    String fixfile = Files.readString(files);
 			Pattern p = Pattern.compile("8=FIX(.+)(?<=\\|)18=(.+?)(?=\\|)", Pattern.MULTILINE);
 			Matcher m = p.matcher(fixfile);
@@ -147,13 +134,14 @@ public class Connect_to_Unix_Server
 			while (m.find()) {
 			fixmessage = m.group();
 			
-			System.out.println( "Fix Log for Compliance ID---> " + Connect_to_Unix_Server.complianceID +"" +  fixmessage);
+			System.out.println( "Extracted only Fix messages for the given compliance id from entire unix file ---> " + Connect_to_Unix_Server.complianceID +"" +  fixmessage);
 		
 			}
 		}catch(Exception e) {
 			
 		}
 	}
+
 	@Given("convert the fix message into JSON and parse it for validation")
 	public void fixtoJSON() throws SerializeException, JsonProcessingException, ParseException {
 	    
@@ -162,6 +150,7 @@ public class Connect_to_Unix_Server
 		map1 = new HashMap<String,Object>();
 		
 		result = fixmessage.split("\\|");
+		
 		
     	// iterate the result and add them to a HashMap 
         for (String fixoutcome : result) { 
@@ -172,60 +161,99 @@ public class Connect_to_Unix_Server
             String key = fix1[0].trim().toString(); 
             String value = fix1[1].trim().toString(); 
             map.put(key, value);
-           
+  
         }
-	        map1.put("Object", map);
+        	
+	        map1.put("Fixjson",map);
 	   	 	list.add(map1);
+	   	 	
+	   	 	//list.add((HashMap<String, Object>) map.get(array.toString()));
         	 
             ObjectMapper mapper = new ObjectMapper();
             jsonstring =  mapper.writeValueAsString(list);
-            System.out.println("Fix message in JSON format for compliance id "+complianceID+"  " + jsonstring);
-                      
-            // js Ojbect has the knowledge of fix message came from unix server which is extracted based on comp id
+            //System.out.println("Fix message in JSON format for compliance id "+complianceID+"  " + jsonstring);
             js_ActualFixMessage = new JsonPath(jsonstring);
+//            int FixMessageCount = js_ActualFixMessage.getInt("Fixjson.size()");
+//            for(int i=0;i<FixMessageCount;i++) {
+//            	
+//            	ActualFixMessageNewVipin=js_ActualFixMessage.get("Fixjson["+i+"].18").toString();
+//          	}
+//            System.out.println("this is the actual Fix message converted into JSON which is extraced from Unix server" + ActualFixMessageNewVipin);
+            //js_ActualFixMessagenewVIPIN = new JsonPath(ActualFixMessageNewVipin);
+           
+         // js_ActualFixMessage Object has the knowledge of fix message came from unix server which is extracted based on comp id
+            //Json path concept -- to parse the json means to validate the values in json we have to use the JSONPATH to traverse the fields of json file, 
+            //store it some varibales and validate. We have to use this during assertion
             
-            int FixTagCount = js_ActualFixMessage.getInt("Object.size()");
-            System.out.println(js_ActualFixMessage.getString("Object.18"));
-            System.out.println(js_ActualFixMessage.getString("Object.17"));
-            System.out.println(js_ActualFixMessage.getString("Object.11"));
-            System.out.println(FixTagCount);
+            
+            //System.out.println(" what is the printing here ..."+js_ActualFixMessage.getString());
              
             // POJO to JSON
-            JsonSerializer js1 = JsonSerializer.DEFAULT_READABLE;
-            
-           // here we are using testdatabuild concept, this is expected data. Fix tag should give this result when US client trade US Broker.
-            // ExpectedFixValues object has knowledge of test data.
-            ExpectedFixValues=  Fixdata.SetFixTags("FIX1.1", "449", "AE", complianceID, "20140402-11:38:34", "TR_UAT_VENDOR", "8", "GBP", "XYZ", "Price", "MULEY");
-                         //SetFixTags(String t8,String t9,String t10,String t11,String t12,String t13,String t14,String t15,String t16,String t17,String t18)
-            String jsonserialistring = js1.serialize(ExpectedFixValues);
-            System.out.println("Expected tag value of Fix tag 18 is -- " + ExpectedFixValues.getT18());
-            System.out.println("Actual tag value of Fix tag 18 is -- " + js_ActualFixMessage.getString("Object.18"));
-            System.out.println(" POJO to JSON "+ jsonserialistring);
+//            JsonSerializer js1 = JsonSerializer.DEFAULT_READABLE;
+//            
+//           // here we are using testdatabuild concept, this is expected data. Fix tag should give this result when US client trade US Broker.
+//           // ExpectedFixValues object has knowledge of test data.
+//            ExpectedFixValues=  Fixdata.SetFixTags("FIX1.1", "449", "AE", complianceID, "20140402-11:38:34", "TR_UAT_VENDOR", "8", "GBP", "XYZ", "Price", "MULEY");
+//            									//SetFixTags(String t8,String t9,String t10,String t11,String t12,String t13,String t14,String t15,String t16,String t17,String t18)
+//            String jsonserialistring = js1.serialize(ExpectedFixValues);
+//            js_ExpectedFixValues = new JsonPath(jsonserialistring);
+//            
+            //System.out.println("Expected tag value of Fix tag 18 is -- " + js_ExpectedFixValues.getString("t18"));
+           //System.out.println("Actual tag value of Fix tag 18 is -- " + js_ActualFixMessage.getString("FixJson.18"));
+//            System.out.println(" POJO to JSON "+ jsonserialistring);
             
             //JSON to POJO
-       
-            JsonParser jsonparser = JsonParser.DEFAULT;
-            FixClass fixoutcome = jsonparser.parse(jsonserialistring, FixClass.class);
-            System.out.println("JSON to POJO " + fixoutcome);
-            //System.out.println(fixoutcome.getT18());
-            System.out.println("tag 18 val is " + fixoutcome.getT18());
-            
-    		//Assert.assertEquals(ExpectedFixValues.getT18(), js_ActualFixMessage.getString("Object.18"));
-    		
-    		Connect_to_Unix_Server.validate_fixmessages(jsonserialistring, jsonserialistring);
+//       
+//            JsonParser jsonparser = JsonParser.DEFAULT;
+//            FixClass fixoutcome = jsonparser.parse(jsonstring, FixClass.class);
+//            System.out.println("JSON to POJO " + fixoutcome);
+//            //System.out.println(fixoutcome.getT18());
+//            System.out.println("tag 18 val is " + fixoutcome.getT18());
+//            
+//    		//Assert.assertEquals(ExpectedFixValues.getT18(), js_ActualFixMessage.getString("Object.18"));
+//    		//Assert.assertEquals(js_ActualFixMessage.getString(key), js_ExpectedFixValues.getString(value));
+//    		
+//    		//Connect_to_Unix_Server.validate_fixmessages(jsonserialistring, jsonserialistring);
             
 	}
 	
-	public static void validate_fixmessages(String key,String value) {
-		js_ActualFixMessage = new JsonPath(jsonstring);
-		Assert.assertEquals(js_ActualFixMessage.getString(key), ExpectedFixValues);
-		Assert.assertEquals(ExpectedFixValues.getT18(), js_ActualFixMessage.getString("Object.18"));
-		//Assert.assertEquals(js.getString("Object.18"),fixoutcome.getT18());
-        //Assert.assertEquals(js.getString("Object.15"),fixoutcome.getT15());
-        //Assert.assertEquals(js.getString("Object.17"),fixoutcome.getT17());
+	@Given("Fix values {string} {string} {string} {string} {string} {string} {string} {string} {string} {string} {string}")
+	public void fix_values(String t8, String t9, String t10, String t11, String t12, String t13, String t14, String t15, String t16, String t17, String t18) throws SerializeException {
+		FixClass f1 = Fixdata.SetFixTags(t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18);
+		
+		JsonSerializer js2 = JsonSerializer.DEFAULT_READABLE;
+		String VipinJson = js2.serialize(f1); // serialise method accept Object
+		
+		System.out.println("Expected test data converted in to POJO to JSON . ."+ VipinJson);
+		ExpectedTestData_Vipin = new JsonPath(VipinJson);
+		//System.out.println("what is this "+ExpectedTestData_Vipin);
+		
+		//System.out.println( "This is new Vipin POJO to JSON --- > " + ExpectedTestData_Vipin.getString("t18"));
+		
+		Assert.assertEquals(ExpectedTestData_Vipin.getString("t18"), js_ActualFixMessage.get("FixJson.18"));
+		
+	}
+	
+
+	@Given("Tag {string} should have value as {string}")
+	public void tag_should_have_value_as(String Key, String expectedValue) {
+		ExpectedTestData_Vipin = new JsonPath(VipinJson);
+		//System.out.println(ExpectedTestData_Vipin.getString("t18"));
+		//System.out.println(ActualFixMessageNewVipin);
+		//Assert.assertEquals(ExpectedTestData_Vipin.getString(Key), js_ActualFixMessage.get("FixJson"));
 	}
 }
 	
 	
 	
+
+
+
+
+
+
+
+
+
+
 

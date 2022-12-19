@@ -1,0 +1,32 @@
+in Given method... 
+Connected to server ...18.191.62.202
+ extract data for this compliance id ABCD1
+Expected test data converted in to POJO to JSON . .{
+	"t10": "3",
+	"t11": "4",
+	"t12": "5",
+	"t13": "6",
+	"t14": "7",
+	"t15": "8",
+	"t16": "GBP",
+	"t17": "10",
+	"t18": "VPM",
+	"t8": "1",
+	"t9": "2"
+}
+[32m[1m┌───────────────────────────────────────────────────────────────────────────────────┐[0m
+[32m[1m│[0m Share your Cucumber Report with your team at [36m[1m[4mhttps://reports.cucumber.io[0m          [32m[1m│[0m
+[32m[1m│[0m Activate publishing with one of the following:                                    [32m[1m│[0m
+[32m[1m│[0m                                                                                   [32m[1m│[0m
+[32m[1m│[0m src/test/resources/cucumber.properties:          [36mcucumber.publish.enabled[0m=[36mtrue[0m    [32m[1m│[0m
+[32m[1m│[0m src/test/resources/junit-platform.properties:    [36mcucumber.publish.enabled[0m=[36mtrue[0m    [32m[1m│[0m
+[32m[1m│[0m Environment variable:                            [36mCUCUMBER_PUBLISH_ENABLED[0m=[36mtrue[0m    [32m[1m│[0m
+[32m[1m│[0m JUnit:                                           [36m@CucumberOptions[0m(publish = [36mtrue[0m) [32m[1m│[0m
+[32m[1m│[0m                                                                                   [32m[1m│[0m
+[32m[1m│[0m More information at [36mhttps://cucumber.io/docs/cucumber/environment-variables/[0m      [32m[1m│[0m
+[32m[1m│[0m                                                                                   [32m[1m│[0m
+[32m[1m│[0m Disable this message with one of the following:                                   [32m[1m│[0m
+[32m[1m│[0m                                                                                   [32m[1m│[0m
+[32m[1m│[0m src/test/resources/cucumber.properties:          [36mcucumber.publish.quiet[0m=[36mtrue[0m      [32m[1m│[0m
+[32m[1m│[0m src/test/resources/junit-platform.properties:    [36mcucumber.publish.quiet[0m=[36mtrue[0m      [32m[1m│[0m
+[32m[1m└───────────────────────────────────────────────────────────────────────────────────┘[0m
