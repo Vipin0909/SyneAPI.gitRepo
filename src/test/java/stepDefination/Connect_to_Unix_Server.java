@@ -69,6 +69,7 @@ public class Connect_to_Unix_Server
 	static JsonPath js_ActualFixMessagenewVIPIN;
 	
 	TestDataBuild Fixdata = new TestDataBuild();
+	FT_tag18_Test tt = new FT_tag18_Test();
 	
 	
 	@Given("unix terminal connection using putty")
@@ -155,7 +156,7 @@ public class Connect_to_Unix_Server
 			while (m.find()) {
 			fixmessage = m.group();
 			
-			System.out.println( "Extracted only FIX message from Unix server based on comp id ---> " + Connect_to_Unix_Server.complianceID +"" +  fixmessage);
+			System.out.println( "Extracted only FIX message from Unix server based on comp id ---> " +  fixmessage);
 			
 		
 			}
@@ -199,7 +200,7 @@ public class Connect_to_Unix_Server
             js_ActualFixMessage = new JsonPath(jsonstring);
             //int birth = js_ActualFixMessage.get("Fix_tag18");
             
-            System.out.println("tag 18 my birthyear.."+ js_ActualFixMessage.get("18").toString());
+            //System.out.println("tag 18 my birthyear.."+ js_ActualFixMessage.get("18").toString());
             
 //            int FixMessageCount = js_ActualFixMessage.getInt("Fixjson.size()");
 //            for(int i=0;i<FixMessageCount;i++) {
@@ -232,14 +233,14 @@ public class Connect_to_Unix_Server
             
             //JSON to POJO
 //       
-            JsonParser jsonparser = JsonParser.DEFAULT;
-            fixoutcome = jsonparser.parse(jsonstring, FixClass.class);
+            //JsonParser jsonparser = JsonParser.DEFAULT;
+            //fixoutcome = jsonparser.parse(jsonstring, FixClass.class);
             
             //System.out.println("print the fix outcome "+fixoutcome);
             
-            System.out.println("JSON to POJO " + fixoutcome);
+            //System.out.println("JSON to POJO " + fixoutcome);
             //System.out.println(fixoutcome.getT18());
-            System.out.println("+++++++tag 18 val is+++++++++++++++ " + fixoutcome.getFix_tag18());
+            //System.out.println("+++++++tag 18 val is+++++++++++++++ " + fixoutcome.getFix_tag18());
             
     		//Assert.assertEquals(ExpectedFixValues.getT18(), js_ActualFixMessage.getString("Object.18"));
     		//Assert.assertEquals(js_ActualFixMessage.getString(key), js_ExpectedFixValues.getString(value));
@@ -270,14 +271,18 @@ public class Connect_to_Unix_Server
 	}
 	
 	
+	
+
 	@Given("tag value {string}")
-	public void tag_value(String Vipin_Fix_tag18) throws ParseException {
-	    
-		JsonParser jsonparser = JsonParser.DEFAULT;
-        fixoutcome18 = jsonparser.parse(jsonstring, FT_tag18_Test.class);
+	public void tag_value(String string) throws ParseException {
+		// json to pojo
+				JsonParser jsonparser = JsonParser.DEFAULT;
+		        fixoutcome18 = jsonparser.parse(jsonstring, FT_tag18_Test.class);
+		        System.out.println("Expected message -- "+fixoutcome18.getVipin_Fix_tag18());
+		        System.out.println("Actual message came from unix server -- " +js_ActualFixMessage.get("18"));
+		        
 	}
-
-
+	
 }
 	
 	

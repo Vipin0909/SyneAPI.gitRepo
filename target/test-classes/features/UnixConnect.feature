@@ -55,20 +55,30 @@ Feature: Fix message test automation
       #|ABCD1|R|DEAL|DEAL
       #|ABCD2|
 #
-  @GivenFixMessages
-  Scenario Outline: US client trading in US - Expected fix messages as test data
-    Given Fix values "<t8>" "<t9>" "<t10>" "<t11>" "<t12>" "<t13>" "<t14>" "<t15>" "<t16>" "<t17>" "<t18>" "<Fix_tag18>"
+  #@GivenFixMessages
+ # Scenario Outline: US client trading in US - Expected fix messages as test data
+  #  Given Fix values "<t8>" "<t9>" "<t10>" "<t11>" "<t12>" "<t13>" "<t14>" "<t15>" "<t16>" "<t17>" "<t18>" "<Fix_tag18>"
     
    
-    Examples:
-    |t8|t9|t10|t11|t12|t13|t14|t15|t16|t17|t18|Fix_tag18|
-    |1 |2 |3  |4  |5  |6  |7  |8  |GBP  |10 |MULEY|1883|
+   # Examples:
+    #|t8|t9|t10|t11|t12|t13|t14|t15|t16|t17|t18|Fix_tag18|
+    #|1 |2 |3  |4  |5  |6  |7  |8  |GBP  |10 |MULEY|1883|
     
     @Validation
     Scenario: Fix message valition for US client trading in US
     And Tag "t18" should have value as "VPM"
     #And Tag "t16" should have value as "USD"
     
+     @tag18
+  Scenario Outline: Title of your scenario outline
+    Given tag value "<Vipin_Fix_tag18>" 
+    ##When I check for the <value> in step
+    #Then I verify the <status> in step
+    #And some other precondition
+
+    Examples: 
+      | Vipin_Fix_tag18 |
+      |1990|
     
     
     

@@ -11,5 +11,7 @@ public class FT_tag18_Test {
 	public void setVipin_Fix_tag18(int vipin_Fix_tag18) {
 		Vipin_Fix_tag18 = vipin_Fix_tag18;
 	}
+
+	
 	
 }
