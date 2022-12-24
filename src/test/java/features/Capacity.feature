@@ -24,12 +24,12 @@ Feature: Test tag 18 feature
 
   @tag2
   Scenario Outline: Title of your scenario outline
-    Given tag value "<Vipin_Fix_tag18>" 
+    Given tag value  "<Vipin_Fix_tag11>" "<Vipin_Fix_tag18>" "<Vipin_Fix_tag8>" 
     ##When I check for the <value> in step
     #Then I verify the <status> in step
     #And some other precondition
 
     Examples: 
-      | Vipin_Fix_tag18 |
-      |1990|
+      | Vipin_Fix_tag18 | Vipin_Fix_tag18 | Vipin_Fix_tag18 |
+      |VIP|VPMM|FIX|
      

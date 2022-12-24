@@ -15,11 +15,13 @@ public class FixClass {
 	private String t17;
 	private String t18;
 	
+	public FixClass() {
+		//Default Constructor
+	}
+	
 	private int tag18;
 	int Fix_tag18 = Integer.parseInt("18"); 
-		
 	
-
 	public int getFix_tag18() {
 		return Fix_tag18;
 	}

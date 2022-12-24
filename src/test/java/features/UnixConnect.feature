@@ -69,16 +69,17 @@ Feature: Fix message test automation
     And Tag "t18" should have value as "VPM"
     #And Tag "t16" should have value as "USD"
     
-     @tag18
+@tag18
   Scenario Outline: Title of your scenario outline
-    Given tag value "<Vipin_Fix_tag18>" 
+    Given tag value  "<f8>" "<f11>" "<f18>"  
     ##When I check for the <value> in step
     #Then I verify the <status> in step
     #And some other precondition
 
     Examples: 
-      | Vipin_Fix_tag18 |
-      |1990|
+      |f8|f11|f18|
+      |FIX 4.4|VIP|VIPIN MULEY|
+      |FIXT.1.1|[01;31m\u001B[KVIP\u001B[m\u001B[K|1990|
     
     
     

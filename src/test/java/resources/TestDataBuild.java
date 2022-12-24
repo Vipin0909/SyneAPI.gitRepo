@@ -8,7 +8,7 @@ public class TestDataBuild {
 
 	FixClass Fixdata = new FixClass();
 	FI_Order_Value ordervalue = new FI_Order_Value();
-	FT_tag18_Test tt = new FT_tag18_Test();
+	
 	
 	public FixClass SetFixTags(String t8,String t9,String t10,String t11,String t12,String t13,String t14,String t15,String t16,String t17,String t18, int fix_tag18) {
 		
@@ -35,10 +35,6 @@ public FI_Order_Value SetFIOrder(String Last_Capacity,String Order_Capacity) {
 	return ordervalue;
 }
 	
-public FT_tag18_Test TestTag18(int Vipin_Fix_tag18 ) {
-	
-	tt.setVipin_Fix_tag18(Vipin_Fix_tag18);
-	return tt;
-}
+
 
 }
