@@ -1,23 +1,24 @@
 in Given method... 
 Connected to server ...
+https://aws.amazon.com/amazon-linux-2/
 34 package(s) needed for security, out of 55 available
 Run "sudo yum update" to apply all updates.
 [ec2-user@ip-172-31-23-201 ~]$ sudo su -
-cd /var/lib/jenkins/workspace/SyneAPI/src/main/java/pojo
-
 grep -ai VIP apiLogs
 
-Last login: Sat Dec 24 09:46:24 UTC 2022 on pts/0
+Last login: Sat Dec 24 09:50:46 UTC 2022 on pts/0
 [root@ip-172-31-23-201 ~]# 
 [root@ip-172-31-23-201 ~]# cd /var/lib/jenkins/workspace/SyneAPI/src/main/java/p ojo
 [root@ip-172-31-23-201 pojo]# 
 [root@ip-172-31-23-201 pojo]# grep -ai VIP apiLogs
-8=FIXT.1.1|11=[01;31m[KVIP[m[K|18=1990|
+8=FIXT.1.1|11=[01;31m[KVIP[m[K|18=1990|20029=EDM|20021=IDM|
 [root@ip-172-31-23-201 pojo]# 
 [root@ip-172-31-23-201 pojo]# exit-status: -1
-Extracted only FIX message from Unix server based on comp id ---> 8=FIXT.1.1|11=[01;31m[KVIP[m[K|18=1990|
-this is new JSON{"f8":"FIXT.1.1","f11":"[01;31m\u001B[KVIP\u001B[m\u001B[K","f18":"1990"}
+Extracted only FIX message from Unix server based on comp id ---> 8=FIXT.1.1|11=[01;31m[KVIP[m[K|18=1990|20029=EDM|20021=IDM|
+this is new JSON{"f8":"FIXT.1.1","f20029":"EDM","f11":"[01;31m\u001B[KVIP\u001B[m\u001B[K","f18":"1990","f20021":"IDM"}
 pojo to json >> {"f8":"FIX 4.4","f11":"VIP","name":"VIPIN MULEY"}
+json to pojoFIXT.1.1
+pojo to json >> {"f8":"FIXT.1.1","f11":"[01;31m\\u001B[KVIP\\u001B[m\\u001B[K","name":"1990"}
 json to pojoFIXT.1.1
 [32m[1m┌───────────────────────────────────────────────────────────────────────────────────┐[0m
 [32m[1m│[0m Share your Cucumber Report with your team at [36m[1m[4mhttps://reports.cucumber.io[0m          [32m[1m│[0m
