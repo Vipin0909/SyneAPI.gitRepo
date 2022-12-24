@@ -78,8 +78,8 @@ Feature: Fix message test automation
 
     Examples: 
       |f8|f11|f18|
-      |FIX 4.4|VIP|VIPIN MULEY|
-      |FIXT.1.1|[01;31m\u001B[KVIP\u001B[m\u001B[K|1990|
+      |FIX4.4|VIP|1990|
+      
     
     
     
