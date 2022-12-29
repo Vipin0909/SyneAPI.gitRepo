@@ -115,10 +115,11 @@ public class Connect_to_Unix_Server
 	{
 		try 
 		{	// pass unix commands on unix terminal
+			ps.flush();
 			ps.println("sudo su -");
 		    ps.println( "cd /var/lib/jenkins/workspace/SyneAPI/src/main/java/pojo");
-		    ps.println("grep -ai "+complianceID+" apiLogs");
-		    ps.close();
+		    ps.println("grep "+complianceID+" apiLogs");
+		    //ps.close();
 	
 		    InputStream in=channel.getInputStream();
 	        byte[] tmp=new byte[1024];
@@ -150,17 +151,17 @@ public class Connect_to_Unix_Server
 		try {
 			Path files = Path.of("C:\\eclipse_workspace_2022\\SyneAPI\\target\\fixlogs.txt");
 		    String fixfile = Files.readString(files);
-			//18=(.+?)(?=\\|)
-		    Pattern p = Pattern.compile("8=FIX(.+)(?<=\\|)", Pattern.MULTILINE);
+			Pattern p = Pattern.compile("8=FIX(.+)(?<=\\|)18=(.+?)(?=\\|)", Pattern.MULTILINE);
 			Matcher m = p.matcher(fixfile);
 			// we can use the List or Map to store the String outcome
 			//List<String> list = new ArrayList();
-			while (m.find()) 
-			{
-				fixmessage = m.group();
-				System.out.println( "Extracted only FIX message from Unix server based on comp id ---> " +  fixmessage);
+			while (m.find()) {
+			fixmessage = m.group();
+			
+			System.out.println( "Extracted only FIX message from Unix server based on comp id ---> " +  fixmessage);
 			}
 		}catch(Exception e) {
+			
 		}
 	}
 
@@ -171,7 +172,11 @@ public class Connect_to_Unix_Server
 		map = new HashMap<String, Object>();
 		map1 = new HashMap<String,Object>();
 		
-		result = fixmessage.split("\\|");
+		try {
+			result = fixmessage.split("\\|");
+		} catch (Exception e) {
+			e.getLocalizedMessage();
+		}
 		
     	// iterate the result and add them to a HashMap 
         for (String fixoutcome : result) 
@@ -190,8 +195,6 @@ public class Connect_to_Unix_Server
             //jsonstring= mapper.writerWithDefaultPrettyPrinter().writeValueAsString(map);
             newjsonString = jsonstring.replaceAll("\\s+", "");
             System.out.println("this is new JSON"+ newjsonString);
-            
-        
             
   }
 
